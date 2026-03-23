@@ -1,4 +1,0 @@
-Running: xsim.dir/WSPETOP_behav/xsimk -simmode gui -wdb WSPETOP_behav.wdb -simrunnum 0 -socket 53435
-Design successfully loaded
-Design Loading Memory Usage: 32956 KB (Peak: 33496 KB)
-Design Loading CPU Usage: 60 ms
