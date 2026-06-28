@@ -16,9 +16,6 @@ module tb_samesignedFPadder;
     integer test_count;
     integer error_count;
 
-    //----------------------------------------
-    // DUT
-    //----------------------------------------
     samesignedFPadder dut (
         .clock(clock),
         .reset(reset),
@@ -31,17 +28,11 @@ module tb_samesignedFPadder;
         .ionorm_sum(ionorm_sum)
     );
 
-    //----------------------------------------
-    // Clock
-    //----------------------------------------
     initial begin
         clock = 0;
         forever #5 clock = ~clock;
     end
 
-    //----------------------------------------
-    // Helper Task
-    //----------------------------------------
     task run_test;
         input [255:0] test_name;
         input [31:0] a;
@@ -69,9 +60,6 @@ module tb_samesignedFPadder;
         end
     endtask
 
-    //----------------------------------------
-    // Basic check task
-    //----------------------------------------
     task expect_cond;
         input [2:0] expected;
 
@@ -84,9 +72,6 @@ module tb_samesignedFPadder;
         end
     endtask
 
-    //----------------------------------------
-    // Main Test Sequence
-    //----------------------------------------
     initial begin
 
         test_count  = 0;
@@ -96,9 +81,6 @@ module tb_samesignedFPadder;
         iob = 0;
         ioflag_inf2 = 0;
 
-        //----------------------------------------
-        // Reset
-        //----------------------------------------
         reset = 1;
 
         repeat(3) @(posedge clock);
@@ -218,10 +200,7 @@ module tb_samesignedFPadder;
             32'h7FC00000,
             32'h3F800000
         );
-
-        //----------------------------------------
-        // Summary
-        //----------------------------------------
+        
         $display("");
         $display("==============================================");
         $display("TEST SUMMARY");

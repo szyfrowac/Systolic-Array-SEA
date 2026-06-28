@@ -1,3 +1,10 @@
+`timescale 1ns / 1ps
+// 
+// 
+// 
+// 
+
+
 `timescale 1ns/1ps
 
 module tb_samesignedFPadderfrontend;
@@ -25,17 +32,11 @@ module tb_samesignedFPadderfrontend;
         .io_round (io_round)
     );
 
-    //---------------------------------------
-    // Clock
-    //---------------------------------------
     initial begin
         clock = 0;
         forever #5 clock = ~clock;
     end
 
-    //---------------------------------------
-    // Check Task
-    //---------------------------------------
     task check_result;
         input [255:0] name;
         input [31:0] expected;
@@ -61,9 +62,6 @@ module tb_samesignedFPadderfrontend;
         end
     endtask
 
-    //---------------------------------------
-    // Main Test Sequence
-    //---------------------------------------
     initial begin
 
         tests  = 0;
@@ -73,9 +71,6 @@ module tb_samesignedFPadderfrontend;
         io_b = 0;
         io_round = 2'b00; // Round to nearest even
 
-        //-----------------------------------
-        // Reset
-        //-----------------------------------
         reset = 1;
 
         repeat(3) @(posedge clock);
@@ -201,9 +196,6 @@ module tb_samesignedFPadderfrontend;
             $display("PASS : NaN + 1");
         end
 
-        //-----------------------------------
-        // Summary
-        //-----------------------------------
         $display("");
         $display("=================================");
         $display("Tests  = %0d", tests);

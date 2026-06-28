@@ -1,23 +1,8 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
 // 
-// Create Date: 06/28/2026 07:28:03 PM
-// Design Name: 
-// Module Name: tb_fpmult
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
 // 
-// Dependencies: 
 // 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
 // 
-//////////////////////////////////////////////////////////////////////////////////
 
 
 `timescale 1ns/1ps
@@ -33,9 +18,6 @@ module tb_FPmul;
     integer tests;
     integer errors;
 
-    //---------------------------------------
-    // DUT (purely combinational)
-    //---------------------------------------
     FPmul dut (
         .io_a     (io_a),
         .io_b     (io_b),
@@ -43,9 +25,6 @@ module tb_FPmul;
         .io_round (io_round)
     );
 
-    //---------------------------------------
-    // Check Task
-    //---------------------------------------
     task check_result;
         input [255:0] name;
         input [31:0] expected;
@@ -72,9 +51,6 @@ module tb_FPmul;
         end
     endtask
 
-    //---------------------------------------
-    // Main Test Sequence
-    //---------------------------------------
     initial begin
 
         tests  = 0;
@@ -245,9 +221,6 @@ module tb_FPmul;
             32'h42800000
         );
 
-        //-----------------------------------
-        // Summary
-        //-----------------------------------
         $display("");
         $display("==============================================");
         $display(" SUMMARY");

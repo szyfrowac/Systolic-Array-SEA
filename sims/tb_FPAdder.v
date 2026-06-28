@@ -12,11 +12,9 @@ module tb_fullFPadder;
   wire [26:0] ionorm_sum;
   wire        ioflag_zero2;
   
-  // Test tracking
   integer test_num;
   integer errors;
   
-  // DUT instantiation
   fullFPadder dut (
     .ioa(ioa),
     .iob(iob),
@@ -28,7 +26,6 @@ module tb_fullFPadder;
     .ioflag_zero2(ioflag_zero2)
   );
   
-  // Helper function to create IEEE 754 single precision float
   function [31:0] make_float;
     input sign;
     input [7:0] exp;
@@ -38,7 +35,6 @@ module tb_fullFPadder;
     end
   endfunction
   
-  // Helper task to display results
   task display_result;
     input [31:0] a;
     input [31:0] b;
@@ -55,7 +51,6 @@ module tb_fullFPadder;
     end
   endtask
   
-  // Helper task for error reporting
   task report_error;
     input [200*8:1] test_name;
     input [200*8:1] error_msg;
@@ -94,7 +89,7 @@ module tb_fullFPadder;
     #10;
     display_result(ioa, iob, "Different exponents (1.0 + 2.0)");
     
-/*    // Test 3: Subtraction (same magnitude, result = 0) (2.0 - 2.0 = 0.0)
+    // Test 3: Subtraction (same magnitude, result = 0) (2.0 - 2.0 = 0.0)
     test_num = test_num + 1;
     ioa = 32'h40000000; // 2.0
     iob = 32'hC0000000; // -2.0
@@ -102,7 +97,7 @@ module tb_fullFPadder;
     display_result(ioa, iob, "Subtraction to zero (2.0 - 2.0)");
     if (iocond[0] != 1'b1) begin
       report_error("Subtraction to zero (2.0 - 2.0)", "Expected zero flag to be set");
-    end*/
+    end
     
     // Test 4: Addition with zero (0.0 + 1.0 = 1.0)
     test_num = test_num + 1;
@@ -202,7 +197,6 @@ module tb_fullFPadder;
     #10;
     display_result(ioa, iob, "Both zeros");
     
-    // Summary
     #10;
     $display("========================================");
     $display("Test Summary:");
@@ -217,7 +211,6 @@ module tb_fullFPadder;
     $finish;
   end
   
-  // Timeout watchdog
   initial begin
     #10000;
     $display("ERROR: Testbench timeout!");

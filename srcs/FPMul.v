@@ -5,78 +5,78 @@ module FPmul(
   input  [1:0]  io_round
 );
 
-  wire  a_sgn = io_a[31]; // @[FPmul.scala 19:19]
-  wire  b_sgn = io_b[31]; // @[FPmul.scala 20:19]
-  wire [7:0] a_exp = io_a[30:23]; // @[FPmul.scala 22:19]
-  wire [7:0] b_exp = io_b[30:23]; // @[FPmul.scala 23:19]
-  wire [23:0] a_mnt = {1'h1,io_a[22:0]}; // @[FPmul.scala 25:25]
-  wire [23:0] b_mnt = {1'h1,io_b[22:0]}; // @[FPmul.scala 26:25]
-  wire  _mntAzero_T_1 = |a_mnt[22:0]; // @[FPmul.scala 31:41]
-  wire  mntAzero = ~(|a_mnt[22:0]); // @[FPmul.scala 31:19]
-  wire  _mntBzero_T_1 = |b_mnt[22:0]; // @[FPmul.scala 32:41]
-  wire  mntBzero = ~(|b_mnt[22:0]); // @[FPmul.scala 32:19]
-  wire  expAone = &a_exp; // @[FPmul.scala 34:23]
-  wire  expBone = &b_exp; // @[FPmul.scala 35:23]
-  wire  Azero = ~(|a_exp) & mntAzero; // @[FPmul.scala 37:28]
-  wire  Bzero = ~(|b_exp) & mntBzero; // @[FPmul.scala 38:28]
-  wire  Inzero = Azero | Bzero; // @[FPmul.scala 39:22]
-  wire  Ainf = expAone & mntAzero; // @[FPmul.scala 41:22]
-  wire  Binf = expBone & mntBzero; // @[FPmul.scala 42:22]
-  wire  IninfN = Ainf & Binf; // @[FPmul.scala 44:21]
-  wire  IninfO = Ainf | Binf; // @[FPmul.scala 46:21]
-  wire  Anan = expAone & _mntAzero_T_1; // @[FPmul.scala 48:22]
-  wire  Bnan = expBone & _mntBzero_T_1; // @[FPmul.scala 49:22]
-  wire  Innan = Anan | Bnan; // @[FPmul.scala 51:20]
-  wire  flag_nan = Innan | IninfN; // @[FPmul.scala 56:25]
-  wire [8:0] _oExp1_T = {1'b0,$signed(a_exp)}; // @[FPmul.scala 76:21]
-  wire [8:0] _oExp1_T_1 = {1'b0,$signed(b_exp)}; // @[FPmul.scala 76:34]
-  wire [8:0] _oExp1_T_4 = $signed(_oExp1_T) + $signed(_oExp1_T_1); // @[FPmul.scala 76:26]
-  wire [7:0] _oExp1_T_5 = {1'b0,$signed(7'h7f)}; // @[FPmul.scala 76:46]
-  wire [8:0] _GEN_15 = {{1{_oExp1_T_5[7]}},_oExp1_T_5}; // @[FPmul.scala 76:39]
-  wire [8:0] oExp1 = $signed(_oExp1_T_4) - $signed(_GEN_15); // @[FPmul.scala 76:39]
-  wire  flag_zero1 = $signed(oExp1) < 9'sh0; // @[FPmul.scala 79:24]
-  wire [47:0] mntmul = a_mnt * b_mnt; // @[FPmul.scala 83:22]
-  wire [1:0] _oExp2_T_1 = {1'b0,$signed(mntmul[47])}; // @[FPmul.scala 87:46]
-  wire [8:0] _GEN_16 = {{7{_oExp2_T_1[1]}},_oExp2_T_1}; // @[FPmul.scala 87:21]
-  wire [8:0] oExp2 = $signed(oExp1) + $signed(_GEN_16); // @[FPmul.scala 87:21]
-  wire [48:0] _GEN_2 = {{1'd0}, mntmul}; // @[FPmul.scala 86:28]
-  wire [48:0] norm_mntmul = _GEN_2 << ~mntmul[47]; // @[FPmul.scala 86:28]
-  wire  R = norm_mntmul[23]; // @[FPmul.scala 96:22]
-  wire  M0 = norm_mntmul[24]; // @[FPmul.scala 95:23]
-  wire  S = |norm_mntmul[22:0]; // @[FPmul.scala 97:31]
-  wire  rb0 = R & (M0 | S); // @[FPmul.scala 99:14]
-  wire  R2 = S | R; // @[FPmul.scala 101:14]
-  wire  oSgn = a_sgn ^ b_sgn; // @[FPmul.scala 73:18]
-  wire  rb2 = R2 & ~oSgn; // @[FPmul.scala 102:16]
-  wire  rb3 = R2 & oSgn; // @[FPmul.scala 104:16]
-  wire  _GEN_0 = io_round == 2'h2 ? rb2 : rb3; // @[FPmul.scala 115:31 117:8 120:8]
-  wire  _GEN_1 = io_round == 2'h1 ? 1'h0 : _GEN_0; // @[FPmul.scala 112:31 114:8]
-  wire  RB = io_round == 2'h0 ? rb0 : _GEN_1; // @[FPmul.scala 109:26 111:8]
-  wire [23:0] _GEN_17 = {{23'd0}, RB}; // @[FPmul.scala 123:43]
-  wire [24:0] rounded_mnt = norm_mntmul[47:24] + _GEN_17; // @[FPmul.scala 123:43]
-  wire [1:0] _oExp3_T_1 = {1'b0,$signed(rounded_mnt[24])}; // @[FPmul.scala 128:49]
-  wire [8:0] _GEN_18 = {{7{_oExp3_T_1[1]}},_oExp3_T_1}; // @[FPmul.scala 128:21]
-  wire [8:0] oExp3 = $signed(oExp2) + $signed(_GEN_18); // @[FPmul.scala 128:21]
-  wire  flag_zero2 = $signed(oExp3) < 9'sh0; // @[FPmul.scala 131:24]
-  wire  flag_zero = Inzero | flag_zero1 | flag_zero2; // @[FPmul.scala 68:43]
-  wire  flag_inf1 = $signed(oExp1) >= 9'shff; // @[FPmul.scala 80:23]
-  wire  flag_inf2 = $signed(oExp2) == 9'shff; // @[FPmul.scala 90:23]
-  wire  flag_inf3 = $signed(oExp3) == 9'shff; // @[FPmul.scala 130:23]
-  wire  flag_inf = IninfO | flag_inf1 | flag_inf2 | flag_inf3; // @[FPmul.scala 69:49]
-  wire [23:0] norm_rounded_mnt = rounded_mnt[24] ? rounded_mnt[24:1] : rounded_mnt[23:0]; // @[FPmul.scala 126:29]
-  wire [2:0] cond = {flag_nan,flag_inf,flag_zero}; // @[FPmul.scala 133:35]
-  wire [23:0] _GEN_3 = cond >= 3'h4 ? 24'hc00000 : 24'hffffff; // @[FPmul.scala 149:26 150:13 154:13]
-  wire  _GEN_5 = cond >= 3'h4 ? 1'h0 : oSgn; // @[FPmul.scala 149:26 152:13 156:13]
-  wire [23:0] _GEN_6 = cond == 3'h2 ? 24'h0 : _GEN_3; // @[FPmul.scala 145:27 146:13]
-  wire  _GEN_8 = cond == 3'h2 ? oSgn : _GEN_5; // @[FPmul.scala 145:27 148:13]
-  wire [23:0] _GEN_9 = cond == 3'h1 ? 24'h0 : _GEN_6; // @[FPmul.scala 141:27 142:13]
-  wire [7:0] _GEN_10 = cond == 3'h1 ? 8'h0 : 8'hff; // @[FPmul.scala 141:27 143:14]
-  wire  _GEN_11 = cond == 3'h1 ? oSgn : _GEN_8; // @[FPmul.scala 141:27 144:13]
-  wire [23:0] o_mnt = cond == 3'h0 ? {{1'd0}, norm_rounded_mnt[22:0]} : _GEN_9; // @[FPmul.scala 137:21 138:13]
-  wire [7:0] o_exp4 = cond == 3'h0 ? oExp3[7:0] : _GEN_10; // @[FPmul.scala 137:21 139:14]
-  wire  o_Sgn = cond == 3'h0 ? oSgn : _GEN_11; // @[FPmul.scala 137:21 140:13]
-  wire [8:0] _io_o_T = {o_Sgn,o_exp4}; // @[FPmul.scala 158:19]
+  wire  a_sgn = io_a[31];
+  wire  b_sgn = io_b[31];
+  wire [7:0] a_exp = io_a[30:23];
+  wire [7:0] b_exp = io_b[30:23];
+  wire [23:0] a_mnt = {1'h1,io_a[22:0]};
+  wire [23:0] b_mnt = {1'h1,io_b[22:0]};
+  wire  _mntAzero_T_1 = |a_mnt[22:0];
+  wire  mntAzero = ~(|a_mnt[22:0]);
+  wire  _mntBzero_T_1 = |b_mnt[22:0];
+  wire  mntBzero = ~(|b_mnt[22:0]);
+  wire  expAone = &a_exp;
+  wire  expBone = &b_exp;
+  wire  Azero = ~(|a_exp) & mntAzero;
+  wire  Bzero = ~(|b_exp) & mntBzero;
+  wire  Inzero = Azero | Bzero;
+  wire  Ainf = expAone & mntAzero;
+  wire  Binf = expBone & mntBzero;
+  wire  IninfN = Ainf & Binf;
+  wire  IninfO = Ainf | Binf;
+  wire  Anan = expAone & _mntAzero_T_1;
+  wire  Bnan = expBone & _mntBzero_T_1;
+  wire  Innan = Anan | Bnan;
+  wire  flag_nan = Innan | IninfN;
+  wire [8:0] _oExp1_T = {1'b0,$signed(a_exp)};
+  wire [8:0] _oExp1_T_1 = {1'b0,$signed(b_exp)};
+  wire [8:0] _oExp1_T_4 = $signed(_oExp1_T) + $signed(_oExp1_T_1);
+  wire [7:0] _oExp1_T_5 = {1'b0,$signed(7'h7f)};
+  wire [8:0] _GEN_15 = {{1{_oExp1_T_5[7]}},_oExp1_T_5};
+  wire [8:0] oExp1 = $signed(_oExp1_T_4) - $signed(_GEN_15);
+  wire  flag_zero1 = $signed(oExp1) < 9'sh0;
+  wire [47:0] mntmul = a_mnt * b_mnt;
+  wire [1:0] _oExp2_T_1 = {1'b0,$signed(mntmul[47])};
+  wire [8:0] _GEN_16 = {{7{_oExp2_T_1[1]}},_oExp2_T_1};
+  wire [8:0] oExp2 = $signed(oExp1) + $signed(_GEN_16);
+  wire [48:0] _GEN_2 = {{1'd0}, mntmul};
+  wire [48:0] norm_mntmul = _GEN_2 << ~mntmul[47];
+  wire  R = norm_mntmul[23];
+  wire  M0 = norm_mntmul[24];
+  wire  S = |norm_mntmul[22:0];
+  wire  rb0 = R & (M0 | S);
+  wire  R2 = S | R;
+  wire  oSgn = a_sgn ^ b_sgn;
+  wire  rb2 = R2 & ~oSgn;
+  wire  rb3 = R2 & oSgn;
+  wire  _GEN_0 = io_round == 2'h2 ? rb2 : rb3;
+  wire  _GEN_1 = io_round == 2'h1 ? 1'h0 : _GEN_0;
+  wire  RB = io_round == 2'h0 ? rb0 : _GEN_1;
+  wire [23:0] _GEN_17 = {{23'd0}, RB};
+  wire [24:0] rounded_mnt = norm_mntmul[47:24] + _GEN_17;
+  wire [1:0] _oExp3_T_1 = {1'b0,$signed(rounded_mnt[24])};
+  wire [8:0] _GEN_18 = {{7{_oExp3_T_1[1]}},_oExp3_T_1};
+  wire [8:0] oExp3 = $signed(oExp2) + $signed(_GEN_18);
+  wire  flag_zero2 = $signed(oExp3) < 9'sh0;
+  wire  flag_zero = Inzero | flag_zero1 | flag_zero2;
+  wire  flag_inf1 = $signed(oExp1) >= 9'shff;
+  wire  flag_inf2 = $signed(oExp2) == 9'shff;
+  wire  flag_inf3 = $signed(oExp3) == 9'shff;
+  wire  flag_inf = IninfO | flag_inf1 | flag_inf2 | flag_inf3;
+  wire [23:0] norm_rounded_mnt = rounded_mnt[24] ? rounded_mnt[24:1] : rounded_mnt[23:0];
+  wire [2:0] cond = {flag_nan,flag_inf,flag_zero};
+  wire [23:0] _GEN_3 = cond >= 3'h4 ? 24'hc00000 : 24'hffffff;
+  wire  _GEN_5 = cond >= 3'h4 ? 1'h0 : oSgn;
+  wire [23:0] _GEN_6 = cond == 3'h2 ? 24'h0 : _GEN_3;
+  wire  _GEN_8 = cond == 3'h2 ? oSgn : _GEN_5;
+  wire [23:0] _GEN_9 = cond == 3'h1 ? 24'h0 : _GEN_6;
+  wire [7:0] _GEN_10 = cond == 3'h1 ? 8'h0 : 8'hff;
+  wire  _GEN_11 = cond == 3'h1 ? oSgn : _GEN_8;
+  wire [23:0] o_mnt = cond == 3'h0 ? {{1'd0}, norm_rounded_mnt[22:0]} : _GEN_9;
+  wire [7:0] o_exp4 = cond == 3'h0 ? oExp3[7:0] : _GEN_10;
+  wire  o_Sgn = cond == 3'h0 ? oSgn : _GEN_11;
+  wire [8:0] _io_o_T = {o_Sgn,o_exp4};
   
-  assign io_o = {_io_o_T,o_mnt[22:0]}; // @[FPmul.scala 158:29]
+  assign io_o = {_io_o_T,o_mnt[22:0]};
   
 endmodule
