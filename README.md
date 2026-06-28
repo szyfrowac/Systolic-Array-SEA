@@ -1,24 +1,31 @@
 # Floating-Point Systolic Array
 
-This repository contains the RTL implementation of a parameterized **Floating-Point Systolic Array** written in Verilog and SystemVerilog. The architecture is designed around a **Weight Stationary Processing Element (WSPE)**, making it highly efficient for dense matrix multiplications, often used in machine learning and scientific computing applications.
+This repository contains the RTL implementation of a fully parameterized **Floating-Point Systolic Array** written in SystemVerilog. The architecture is designed around a **Weight-Stationary Processing Element (WSPE)**, making it highly efficient for dense matrix multiplications: $C = (A \\times B) + D$.
+
+The array natively computes using IEEE-754 32-bit floating-point arithmetic.
+
+## Detailed Documentation
+
+For a deep dive into how the array works, please read the following detailed documentation files:
+- [Architecture & Dataflow](file:///home/phanikar/BITS/3-2/Projects/Systolic-Array/docs/architecture.md) - Details the weight-stationary flow, PE internals, reset logic, and final accumulation stage.
+- [Simulation & Testing](file:///home/phanikar/BITS/3-2/Projects/Systolic-Array/docs/simulation_and_testing.md) - Details the automated self-checking testbench generator and how to simulate any `N x M` array.
 
 ## Directory Structure
 
-- **`src/`**: Contains the hardware source code.
-  - `Systolic_Array.sv`: The top-level module that generates a parameterized 2D mesh (rows x cols) of processing elements.
-  - `WSPE.v`: The Weight Stationary Processing Element (PE). This is the core compute unit of the array, performing MAC (Multiply-Accumulate) operations using floating-point arithmetic.
-  - `FPadder.v` / `fullFPadder.v`: Modules for floating-point addition.
-  - `FPMul.v`: Module for floating-point multiplication.
-  - `roundingunit.v`: Logic for rounding floating-point results.
-- **`sim/`**: Contains the testbenches for simulation and verification.
-  - `tb_FPAdder.v`: Testbench for verifying the standalone floating-point adder.
-  - `tb_WSPETOP.v`: Testbench for verifying the WSPE module.
+- **`srcs/`**: Contains the hardware source code.
+  - `Systolic_Array.sv`: The top-level parameterized 2D mesh of PEs with the final FPadder stage.
+  - `WSPE.v`: The Weight-Stationary Processing Element (PE), the core compute unit.
+  - `FPadder.v` / `FPMul.v`: Floating-point arithmetic modules.
+- **`sims/`**: Contains simulation scripts and testbenches.
+  - `generate_tb.py`: A powerful Python script that automatically generates a fully timed, self-checking testbench for any array dimensions.
+  - `tb_SystolicArray.sv` / `tb_SystolicArray_3x3.sv`: Generated testbenches for simulating the full array.
 
-## Architecture Details
+## Running Simulations
 
-- **Processing Element (PE)**: The `WSPETOP` module takes floating-point inputs (`io_a`, `io_b_in`, `io_d`, `io_d_prime`), performs floating-point multiplication and addition, and propagates the data and results to adjacent PEs. The design utilizes a weight-stationary dataflow, where weights (e.g., `b_reg`) can be loaded and held locally within the PE while input activations flow through.
-- **Systolic Array**: The `SystolicArray` module connects these PEs in a grid. Activations propagate horizontally across rows, while other operands can propagate vertically or remain stationary depending on the exact dataflow mapped onto the array.
+We provide a Python script to automatically construct cycle-accurate testbenches for any parameterization of the array. To generate a testbench for a 3x3 array:
 
-## Simulation
+```bash
+python3 sims/generate_tb.py --rows 3 --cols 3 --k 3 --out sims/tb_SystolicArray_3x3.sv
+```
 
-You can simulate the design using standard Verilog simulation tools (e.g., Vivado Simulator, ModelSim/Questa, Icarus Verilog, or Verilator). Ensure you include all relevant files from the `src/` directory when running the testbenches in the `sim/` directory.
+This generates a testbench containing randomized small floating-point inputs, automatically staggering them correctly for a systolic pipeline, and checking the answers. You can load this testbench into Vivado Simulator (or your preferred tool) to run the self-checking simulation.

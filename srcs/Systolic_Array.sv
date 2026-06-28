@@ -33,7 +33,7 @@ module SystolicArray #(
   input [DATA_WIDTH-1:0] io_b_in [0:ROWS-1][0:COLS-1],
   input io_load_b,
   
-  input  [DATA_WIDTH-1:0] io_d_in [0:ROWS-2][0:COLS-2],
+  input  [DATA_WIDTH-1:0] io_d_in [0:COLS-1],
   
   // Control signal
   input [1:0] io_round,
@@ -41,9 +41,8 @@ module SystolicArray #(
   // Output ports - one per row for 'a' data
   output [DATA_WIDTH-1:0] io_a_out [0:ROWS-1],
   
-  // Output ports - one per PE for 'd' and 'd_prime'
-  output [DATA_WIDTH-1:0] io_d_out [0:ROWS-1][0:COLS-1],
-  output [DATA_WIDTH-1:0] io_d_prime_out [0:ROWS-1][0:COLS-1]
+  // Output ports - final C results per column
+  output [DATA_WIDTH-1:0] io_c_out [0:COLS-1]
 );
   
   reg [DATA_WIDTH-1:0] d_pipe [0:ROWS-1][0:COLS-1];
@@ -59,10 +58,15 @@ module SystolicArray #(
   generate
     for(r = 0; r < ROWS; r = r + 1) begin : gen_row_out
       assign io_a_out[r] = pe_a_out[r][COLS-1];
-      for(c = 0; c < COLS; c = c + 1) begin : gen_col_out
-        assign io_d_out[r][c] = pe_d_out[r][c];
-        assign io_d_prime_out[r][c] = pe_d_prime_out[r][c];
-      end
+    end
+    for(c = 0; c < COLS; c = c + 1) begin : gen_col_out
+      // Final adder per column to sum D and D'
+      FPadder final_adder (
+        .io_a     (pe_d_out[ROWS-1][c]),
+        .io_b     (pe_d_prime_out[ROWS-1][c]),
+        .io_o     (io_c_out[c]),
+        .io_round (io_round)
+      );
     end
   endgenerate
 
@@ -80,8 +84,8 @@ module SystolicArray #(
         end
 
         if (r == 0) begin
-          assign d_in = io_d_in[0][c];
-          assign d_prime_in = io_d_in[0][c][DATA_WIDTH-1] ? {DATA_WIDTH{1'b0}} : {1'b1, {(DATA_WIDTH-1){1'b0}}};
+          assign d_in = io_d_in[c];
+          assign d_prime_in = io_d_in[c][DATA_WIDTH-1] ? {DATA_WIDTH{1'b0}} : {1'b1, {(DATA_WIDTH-1){1'b0}}};
         end else begin
           assign d_in = d_pipe[r-1][c];
           assign d_prime_in = d_prime_pipe[r-1][c];
@@ -104,8 +108,8 @@ module SystolicArray #(
     end
   endgenerate
 
-  always_ff @(posedge clock or negedge reset) begin
-    if(!reset) begin
+  always_ff @(posedge clock or posedge reset) begin
+    if(reset) begin
       for(int i = 0; i < ROWS; i = i + 1) begin
         for(int j = 0; j < COLS; j = j + 1) begin
           d_pipe[i][j] <= {DATA_WIDTH{1'b0}};
