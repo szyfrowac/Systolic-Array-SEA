@@ -1,4 +1,4 @@
-# Floating-Point Systolic Array
+# Sign Separated Systolic Array
 
 This repository contains the RTL implementation of a fully parameterized **Floating-Point Systolic Array** written in SystemVerilog. The architecture is designed around a **Weight-Stationary Processing Element (WSPE)**, making it highly efficient for dense matrix multiplications: $C = (A \\times B) + D$.
 
