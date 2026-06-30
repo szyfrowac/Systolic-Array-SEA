@@ -10,17 +10,17 @@ sv xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/i
 "../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ip/vip_bd_vip_c_0/sim/vip_bd_vip_c_0.sv" \
 
 verilog xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/ipshared/8713/hdl" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/FPMul.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/FPadder.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/WSPE.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/fullFPadder.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/roundingunit.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/samesignedFPadder.v" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/samesignedFPadderfrontend.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/FPMul.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/FPadder.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/WSPE.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/fullFPadder.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/roundingunit.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/samesignedFPadder.v" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/samesignedFPadderfrontend.v" \
 
 sv xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/ipshared/8713/hdl" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/Systolic_Array.sv" \
-"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/0a96/src/axi_systolic_wrapper.sv" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/Systolic_Array.sv" \
+"../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ipshared/bb44/src/axi_systolic_wrapper.sv" \
 "../../../../vip_sim_proj.ip_user_files/bd/vip_bd/ip/vip_bd_systolic_array_0_0/sim/vip_bd_systolic_array_0_0.sv" \
 
 verilog xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/ipshared/8713/hdl" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
@@ -28,7 +28,7 @@ verilog xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip
 "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/hdl/vip_bd_wrapper.v" \
 
 sv xil_defaultlib  --include "../../../../vip_sim_proj.gen/sources_1/bd/vip_bd/ipshared/8713/hdl" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
-"../../../../../src/tb/axi_vip_tb.sv" \
+"../../../../../../src/tb/axi_vip_tb.sv" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

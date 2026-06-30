@@ -92,3 +92,26 @@ tb_snap_non_pipe.wdb
 tb_snap_pipe.wdb
 xsim_909976.backup.jou
 xsim_909976.backup.log
+
+# Vivado Directories
+gui_proj/gui_proj.cache/
+gui_proj/gui_proj.hw/
+gui_proj/gui_proj.sim/
+gui_proj/gui_proj.runs/
+gui_proj/gui_proj.gen/
+.Xil/
+
+# Vitis Workspaces
+Vitis/
+
+# Logs and Journals
+*.jou
+*.log
+*.pb
+*.str
+*.backup.*
+
+# Temporary
+*.*~
+*.swp
+
