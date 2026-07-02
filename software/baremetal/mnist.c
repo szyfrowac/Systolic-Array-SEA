@@ -68,8 +68,6 @@ void Run_Hardware_Ribbon() {
 
 void Software_MLP() {
     // 1. Calculate the Hidden Layer (Input_Images * W1_Soft)
-    // Hint: Input is [BATCH_SIZE][INPUT_SIZE], W1 is [INPUT_SIZE][HIDDEN_SIZE]
-    // Write your nested loops here!
     for(int i = 0; i < BATCH_SIZE; i++) {
         for(int j = 0; j < HIDDEN_SIZE; j++) {
             float sum = 0.0f;
@@ -81,7 +79,6 @@ void Software_MLP() {
     }
 
     // 2. Apply ReLU to Hidden_Soft
-    // Hint: If a value in Hidden_Soft is < 0.0f, set it to 0.0f!
     for(int i = 0; i < BATCH_SIZE; i++) {
         for(int j = 0; j < HIDDEN_SIZE; j++) {
             if(Hidden_Soft[i][j] < 0) {
@@ -91,7 +88,6 @@ void Software_MLP() {
     }
 
     // 3. Calculate the Output Layer (Hidden_Soft * W2_Soft)
-    // Hint: Output is [BATCH_SIZE][OUTPUT_SIZE]
     for(int i = 0; i < BATCH_SIZE; i++) {
         for(int j = 0; j < OUTPUT_SIZE; j++) {
             float sum = 0.0f;
@@ -108,8 +104,7 @@ void Hardware_MLP() {
     // LAYER 1: Hidden_Hard = Input_Images * W1_Soft
     // ----------------------------------------------------
 
-    // TASK: Fill in these loop bounds for Layer 1!
-    // Hint: j steps by HW_COLS. k steps by HW_COLS.
+    // ----------------------------------------------------
     for(int j = 0; j < HIDDEN_SIZE; j += HW_COLS) {
         for(int k = 0; k < INPUT_SIZE; k += HW_COLS) {
 
@@ -164,7 +159,7 @@ void Hardware_MLP() {
     // ----------------------------------------------------
     // LAYER 3: Output_Hard = Hidden_Hard * W2_Soft
     // ----------------------------------------------------
-    // We will do this next! Leave this empty for now.
+    // ----------------------------------------------------
     for(int j = 0; j < OUTPUT_SIZE; j += HW_COLS) {
         for(int k = 0; k < HIDDEN_SIZE; k += HW_COLS) {
 
