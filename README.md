@@ -9,8 +9,10 @@ The core compute hardware is built upon the **Sign-Separated Accumulation (SEA)*
 - **Software**: A hybrid Baremetal C inference engine. The ARM Cortex-A9 CPU handles activation functions (ReLU, ArgMax) while streaming Matrix Multiplication (GEMM) layers to the FPGA hardware via AXI DMA.
 - **Results**: Achieved a **1.92x Speedup** over the ARM CPU on a tiny MNIST network (`784 -> 128 -> 10`), and a massive **10x Speedup** on large 1024x1024 matrix operations! The hardware natively classified real MNIST digits with 100% mathematical accuracy compared to the Python baseline model.
 
-![1024x1024 Benchmark Results](./Benchmark_1024x1024.png)
-![256x256 Benchmark Results](./Benchmark_256x256.png)
+<p float="left">
+  <img src="./software/Benchmark_1024x1024.png" width="400" alt="1024x1024 Benchmark Results" />
+  <img src="./software/Benchmark_256x256.png" width="400" alt="256x256 Benchmark Results" />
+</p>
 
 ## Core Reference & Citations
 This hardware accelerator implements the accumulation scheme described in the following research paper:
