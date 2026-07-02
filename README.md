@@ -9,6 +9,9 @@ The core compute hardware is built upon the **Sign-Separated Accumulation (SEA)*
 - **Software**: A hybrid Baremetal C inference engine. The ARM Cortex-A9 CPU handles activation functions (ReLU, ArgMax) while streaming Matrix Multiplication (GEMM) layers to the FPGA hardware via AXI DMA.
 - **Results**: Achieved a **1.92x Speedup** over the ARM CPU on a tiny MNIST network (`784 -> 128 -> 10`), and a massive **10x Speedup** on large 1024x1024 matrix operations! The hardware natively classified real MNIST digits with 100% mathematical accuracy compared to the Python baseline model.
 
+![1024x1024 Benchmark Results](./Benchmark_1024x1024.png)
+![256x256 Benchmark Results](./Benchmark_256x256.png)
+
 ## Core Reference & Citations
 This hardware accelerator implements the accumulation scheme described in the following research paper:
 
@@ -22,12 +25,12 @@ The SEA architecture accumulates positive and negative products separately using
 While the original SEA architecture was evaluated in simulation on RISC-V Gemmini setups, this project implements a standalone, physical deployment on a Xilinx Zynq FPGA. The following key modifications were introduced to make it synthesizable and performant on physical silicon:
 
 1. **Pipelined Arithmetic Units**: The custom floating-point adders and multipliers inside each Processing Element (PE) were heavily pipelined. This design modification was required to reduce critical path delay, achieve timing closure, and allow the array to run at higher clock frequencies on the Zynq PL fabric.
-2. **AXI-Stream Wrapping**: The entire 8x8 systolic array has been wrapped with an AXI-Stream wrapper (`axi_systolic_wrapper.sv`). This packages the array as a standard Vivado IP Core, enabling easy drag-and-drop integration in Vivado IP Integrator and automated memory streaming via standard AXI DMA controllers.
+2. **AXI-Stream Wrapping**: The 8x8 systolic array has been AXI4-Stream wrapped (`axi_systolic_wrapper.sv`). This packages the array as a standard Vivado IP Core, enabling easy drag-and-drop integration and automated memory streaming via standard AXI DMA controllers.
 
 ---
 
 ## Directory Structure
-- **`/hdl/src`**: The SystemVerilog HDL sources (Systolic Array, WSPE, FPMul, and the custom AXI Wrapper).
+- **`/hdl/src`**: The Verilog HDL sources (Systolic Array, WSPE, FPMul, and the custom AXI Wrapper).
 - **`/hdl/sim`**: Python-based testbench generators and simulation wrappers.
 - **`/tcl`**: All project setup, synthesis, and run scripts in TCL format.
 - **`/vivado_projects`**: Vivado GUI projects, including the main project (`gui_proj`) and simulation projects.
@@ -40,9 +43,24 @@ While the original SEA architecture was evaluated in simulation on RISC-V Gemmin
 
 ## Architecture
 
-### The Weight-Stationary Dataflow
-The array expects `Matrix B` (Weights) to be streamed in first. The weights are passed down the columns and permanently locked into the internal registers of the PEs. 
-Once locked, `Matrix A` (Inputs) streams in row-by-row from the left. As the inputs march across the array, they are multiplied by the stationary weights, and the partial sums cascade downwards through the columns.
+![System Block Diagram](./Block_Diagram.png)
+
+### Weight-Stationary Dataflow
+
+The accelerator employs a **weight-stationary dataflow**, where the elements of **Matrix B (weights)** are streamed into the systolic array first. These weights propagate down their respective columns and are then stored in the local registers of the Processing Elements (PEs), remaining stationary throughout the computation.
+
+Once the weights are loaded:
+
+1. **Matrix A (input activations)** is streamed into the array row-by-row from the left.
+2. **Matrix D (bias values or pre-accumulated partial sums)** is streamed column-by-column from the top.
+
+As the input activations traverse the array, they encounter the stationary weights within each PE, where multiply-accumulate (MAC) operations are performed. The incoming values from **Matrix D** are successively updated with these products and propagated downward through the columns as partial sums. After passing through all relevant PEs, the final accumulated results emerge from the bottom of the array, producing the output matrix:
+
+$$
+C = (A \times B) + D
+$$
+
+This dataflow minimizes weight movement by keeping weights local to each PE, thereby reducing memory bandwidth requirements and improving computational efficiency.
 
 ### Hybrid CPU-FPGA Offloading
 Due to AXI DMA limitations (14-bit max transfer length), the C software automatically chunks large matrices into "Ribbons" (e.g. `256 x 8`) and streams them vertically.
