@@ -8,13 +8,16 @@ This repository contains a complete hardware-software co-design project demonstr
 - **Results**: Achieved a **1.92x Speedup** over the ARM CPU on a tiny MNIST network (`784 -> 128 -> 10`), and a massive **10x Speedup** on large 1024x1024 matrix operations! The hardware natively classified real MNIST digits with 100% mathematical accuracy compared to the Python baseline model.
 
 ## Directory Structure
-- `/src`: The SystemVerilog HDL sources (Systolic Array, WSPE, FPMul).
-- `/sims`: Python-based testbench generators and simulation wrappers.
-- `/gui_proj`: The Vivado Block Design project containing the AXI DMA IPs and Zynq PS.
-- `/Vitis_Zed`: The Vitis baremetal software workspace containing `mnist.c` and our pre-trained `weights.h`.
-- `/ip_repo`: The packaged Vivado IP for the Systolic Array, ready to be dropped into any block design!
-- `/software/scripts`: Python scripts used to download the MNIST dataset and train the baseline neural network.
-- `/dataset`: Raw MNIST datasets.
+- **`/hdl/src`**: The SystemVerilog HDL sources (Systolic Array, WSPE, FPMul).
+- **`/hdl/sim`**: Python-based testbench generators and simulation wrappers.
+- **`/tcl`**: All project setup, synthesis, and run scripts in TCL format.
+- **`/vivado_projects`**: Vivado GUI projects, including the main project (`gui_proj`) and simulation projects.
+- **`/hardware_release`**: Compiled hardware handoff files (**`Systolic_Array_8x8.xsa`** and **`Systolic_Array_8x8.bit`**) for flashing and target software compilation.
+- **`/Vitis_Zed`**: The Vitis baremetal software workspace containing `mnist.c` and our pre-trained `weights.h`.
+- **`/ip_repo`**: The packaged Vivado IP for the Systolic Array, ready to be dropped into any block design!
+- **`/software/scripts`**: Python scripts used to download the MNIST dataset and train the baseline neural network.
+- **`/software/baremetal`**: Standard C baseline code and tests.
+- **`/dataset`**: Raw MNIST datasets.
 
 ## Architecture
 

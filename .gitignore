@@ -15,25 +15,10 @@ tb_snap_pipe.wdb
 *.pb
 *.str
 *.wdb
-
-# Vivado Directories
-gui_proj/gui_proj.cache/
-gui_proj/gui_proj.hw/
-gui_proj/gui_proj.sim/
-gui_proj/gui_proj.runs/
-gui_proj/gui_proj.gen/
 .Xil/
 
-# Vitis Workspaces
+# Ignore All Vivado and Vitis project directories
+vivado_projects/
+Vitis_Zed/
 Vitis/
-Vitis_Zed/.metadata/
-Vitis_Zed/RemoteSystemsTempFiles/
-Vitis_Zed/.analytics
-Vitis_Zed/IDE.log
-Vitis_Zed/Systolic_array_8x8/
-Vitis_Zed/Systolic_Array_Block_system/
-Vitis_Zed/Systolic_Array_Block/Debug/
-Vitis_Zed/Systolic_Array_Block/Release/
-Vitis_Zed/Systolic_Array_Block/.cproject
-Vitis_Zed/Systolic_Array_Block/.project
-Vitis_Zed/Systolic_Array_Block/.settings/
+build/
